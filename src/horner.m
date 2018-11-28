@@ -1,12 +1,12 @@
-function horner(varargin)
-n = varargin{1};
+function horner(fileName)
+fileID = fopen(fileName, 'r');
+A = fscanf(fileID, '%f', [1 Inf]);
+n = A(1);
 a = zeros(1,n+1);
 for i = 1:n+1
-    a(i) = varargin{i+1};
+    a(i) = A(i+1);
 end
-x0 = varargin{nargin};
-display(x0);
-
+x0 = A(size(A,2));
 answer = a(n+1);
 dev = a(n+1);
 for i = n:-1:1

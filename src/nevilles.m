@@ -1,22 +1,22 @@
-function nevilles(varargin)
-n = varargin{1};
+function nevilles(fileName)
+fileID = fopen(fileName, 'r');
+temp = fscanf(fileID, '%f', [1 Inf]); 
+n = temp(1);
 n=n+1;
 n2 = n*2-1;
 cord = zeros(1,n2);
 A = zeros(n);
 
-for i = 2:nargin-1
-    cord(i-1) = varargin{i};
+for i = 2:size(temp,2)-1
+    cord(i-1) = temp(i);
 end
 
-x0 = varargin{nargin};
-
+x0 = temp(size(temp,2));
 xcord = zeros(1,n);
 
 for i = 1:numel(xcord)
     xcord(i) = cord(i*2-1);
 end
-
 ycord = zeros(1,n);
 
 for i=1:numel(ycord)

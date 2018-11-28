@@ -1,22 +1,25 @@
 
-function cramers(varargin)
-n = varargin{1};
+function cramers(fileName)
+
+fileID = fopen(fileName, 'r');
+temp = fscanf(fileID, '%f', [1, Inf]);
+n = temp(1);
 A = zeros(n,n);
 index = 2;
 for i = 1:n
    for j = 1:n
-      A(i,j) = varargin{index}; 
+      A(i,j) = temp(index); 
       index = index+1;
    end
 end
 b = zeros(n,1);
 b(1,1) = 1;
 index2 = 1;
-for i = (n*n)+2:nargin
-    b(index2,1) = varargin{i};
-    index = index+1;
+for i = index+1:size(temp,2)
+    b(index2,1) = temp(i);
     index2 = index2+1;
 end
+
 
 detA = gaussian(A);
 fprintf("determinant A: " + detA + "\n");
@@ -33,7 +36,7 @@ for i = 1:n
 end
 
 for i = 1:size(answer)
-    fprintf("x" + 1 + ": " + answer(i) +"\n");
+    fprintf("x" + i + ": " + answer(i) +"\n");
 end
 
 end
@@ -41,23 +44,25 @@ end
 function x = gaussian(A)
 A = A-eps(1);
 n = size(A,1);
+rowSwitches = 0;
 for i = 1:n-1
     for j = i+1:n
         for k = 1:n
             val1 = A(i,i);
-            val2 = A(j,k);
-            if  abs(val1) < abs(val2) 
+            val2 = A(j,i);
+            if  abs(val1) < abs(val2)
              A([i j],:)=A([j i],:);
+             rowSwitches = rowSwitches+1;
             end
         end
     end
-   A(i+1:n,:) = A(i+1:n,:) - (A(i+1:n,i)/A(i,i))*A(i,:);
+   A(i+1:n,:) = A(i+1:n,:) - ((A(i+1:n,i)/A(i,i))*A(i,:));
+   
 end 
-
 answer = 1;
 
 for i = 1:n
     answer = answer * A(i,i);
 end
-x = answer;
+x = answer * (-1).^rowSwitches;
 end
